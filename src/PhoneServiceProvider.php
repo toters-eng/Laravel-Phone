@@ -6,8 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Factory;
 use Illuminate\Validation\Rule;
 use libphonenumber\PhoneNumberUtil;
-use Propaganistas\LaravelPhone\Rules;
-use Propaganistas\LaravelPhone\Validation;
+use Propaganistas\LaravelPhone\Rules\Phone as PhoneRules;
+use Propaganistas\LaravelPhone\Validation\Phone as PhoneValidator;
 
 class PhoneServiceProvider extends ServiceProvider
 {
@@ -25,11 +25,11 @@ class PhoneServiceProvider extends ServiceProvider
         $this->app->alias('libphonenumber', PhoneNumberUtil::class);
 
         $this->callAfterResolving('validator', function (Factory $validator) {
-            $validator->extendDependent('phone', Validation\Phone::class . '@validate');
+            $validator->extendDependent('phone', PhoneValidator::class . '@validate');
         });
 
         Rule::macro('phone', function () {
-            return new Rules\Phone;
+            return new PhoneRules();
         });
     }
 }
