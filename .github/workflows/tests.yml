@@ -72,10 +72,25 @@ jobs:
         if: matrix.php == 8.2
         run: |
           composer require "nesbot/carbon=^2.63" --dev --no-interaction --no-update
-      
+
+      - name: Patch LaraStan version
+        if: matrix.laravel <= 9
+        run: |
+          composer require "nunomaduro/larastan=^1.0" --dev --no-interaction --no-update
+
+      - name: Patch LaraStan version
+        if: matrix.laravel > 9.0 && matrix.laravel <= 11.16
+        run: |
+          composer require "nunomaduro/larastan=^2.0" --dev --no-interaction --no-update
+
+      - name: Patch LaraStan version
+        if: matrix.laravel > 11.16
+        run: |
+          composer require "nunomaduro/larastan=^3.0" --dev --no-interaction --no-update
+
       - name: Install dependencies
         run: |
-          composer require "illuminate/support=^${{ matrix.laravel }}" --no-interaction --no-update
+          composer require "illuminate/support=^${{ matrix.laravel }}" "illuminate/contracts=^${{ matrix.laravel }}" "illuminate/validation=^${{ matrix.laravel }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
 
       - name: Execute tests
